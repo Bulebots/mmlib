@@ -1,4 +1,4 @@
-#include "speaker.h"
+#include "music.h"
 
 /**
  * Number of semitones above C, for each note in an octave.
@@ -26,7 +26,7 @@ float BASE_FREQUENCY = 440.;
  * @param[in] accidental Number of semitones to sum to the note.
  * @param[in] duration Duration of the note, in seconds.
  */
-void speaker_play(char note, uint8_t octave, int8_t accidental, float duration)
+void music_play(char note, uint8_t octave, int8_t accidental, float duration)
 {
 	int16_t sound;
 	float frequency;
