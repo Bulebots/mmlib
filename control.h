@@ -2,9 +2,9 @@
 #define __CONTROL_H
 
 #include "mmlib/encoder.h"
+#include "mmlib/hmi.h"
 
 #include "detection.h"
-#include "hmi.h"
 #include "motor.h"
 #include "setup.h"
 #include "speed.h"

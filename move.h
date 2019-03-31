@@ -5,11 +5,11 @@
 
 #include "mmlib/clock.h"
 #include "mmlib/control.h"
+#include "mmlib/hmi.h"
 #include "mmlib/path.h"
 #include "mmlib/search.h"
 #include "mmlib/speed.h"
 
-#include "hmi.h"
 #include "motor.h"
 #include "setup.h"
 
