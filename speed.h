@@ -2,9 +2,9 @@
 #define __SPEED_H
 
 #include "mmlib/common.h"
+#include "mmlib/move.h"
 #include "mmlib/path.h"
 
-#include "move.h"
 #include "setup.h"
 
 float get_linear_acceleration(void);
