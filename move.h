@@ -9,6 +9,7 @@
 #include "mmlib/path.h"
 #include "mmlib/search.h"
 #include "mmlib/speed.h"
+#include "mmlib/walls.h"
 
 #include "motor.h"
 #include "setup.h"

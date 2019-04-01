@@ -5,9 +5,9 @@
 #include "mmlib/music.h"
 #include "mmlib/solve.h"
 #include "mmlib/speed.h"
+#include "mmlib/walls.h"
 
 #include "buttons.h"
-#include "detection.h"
 #include "leds.h"
 
 void repeat_blink(uint8_t count, uint16_t time);

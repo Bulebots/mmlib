@@ -8,8 +8,8 @@
 #include "mmlib/logging.h"
 #include "mmlib/mpu.h"
 #include "mmlib/speed.h"
+#include "mmlib/walls.h"
 
-#include "detection.h"
 #include "move.h"
 #include "setup.h"
 

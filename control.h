@@ -3,8 +3,9 @@
 
 #include "mmlib/encoder.h"
 #include "mmlib/hmi.h"
+#include "mmlib/walls.h"
 
-#include "detection.h"
+
 #include "motor.h"
 #include "setup.h"
 #include "speed.h"

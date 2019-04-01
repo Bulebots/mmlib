@@ -4,8 +4,8 @@
 #include "mmlib/logging.h"
 #include "mmlib/path.h"
 #include "mmlib/search.h"
+#include "mmlib/walls.h"
 
-#include "detection.h"
 #include "eeprom.h"
 #include "move.h"
 #include "setup.h"
