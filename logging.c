@@ -147,7 +147,7 @@ void log_sensors_raw(void)
 	uint16_t off[NUM_SENSOR];
 	uint16_t on[NUM_SENSOR];
 
-	get_sensors_raw(off, on);
+	get_sensors_raw(on, off);
 
 	LOG_INFO("OFF-ON,%d,%d,%d,%d,%d,%d,%d,%d", off[SENSOR_SIDE_LEFT_ID],
 		 off[SENSOR_SIDE_RIGHT_ID], off[SENSOR_FRONT_LEFT_ID],
@@ -167,7 +167,7 @@ void log_data_front_sensors_calibration(void)
 	uint16_t on[NUM_SENSOR];
 	int32_t micrometers = get_encoder_average_micrometers();
 
-	get_sensors_raw(off, on);
+	get_sensors_raw(on, off);
 
 	LOG_DATA("[%" PRId32 ",%d,%d,%d,%d,%.4f,%.4f]", micrometers,
 		 on[SENSOR_FRONT_LEFT_ID], off[SENSOR_FRONT_LEFT_ID],
