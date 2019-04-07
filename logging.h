@@ -10,9 +10,9 @@
 #include "mmlib/control.h"
 #include "mmlib/encoder.h"
 #include "mmlib/mpu.h"
-#include "printf/printf.h"
 #include "mmlib/speed.h"
 #include "mmlib/walls.h"
+#include "printf/printf.h"
 
 #include "detection.h"
 #include "move.h"

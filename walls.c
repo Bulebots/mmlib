@@ -26,9 +26,9 @@ void update_distance_readings(uint16_t *on, uint16_t *off)
 	uint8_t i = 0;
 
 	for (i = 0; i < NUM_SENSOR; i++) {
-		distance[i] = (sensors_calibration_a[i] /
-				   sensors_raw_log(on[i], off[i]) -
-			       sensors_calibration_b[i]);
+		distance[i] =
+		    (sensors_calibration_a[i] / sensors_raw_log(on[i], off[i]) -
+		     sensors_calibration_b[i]);
 		if ((i == SENSOR_SIDE_LEFT_ID) || (i == SENSOR_SIDE_RIGHT_ID))
 			distance[i] -= calibration_factor[i];
 	}
