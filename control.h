@@ -5,7 +5,6 @@
 #include "mmlib/hmi.h"
 #include "mmlib/walls.h"
 
-
 #include "motor.h"
 #include "setup.h"
 #include "speed.h"
