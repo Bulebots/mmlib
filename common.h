@@ -7,6 +7,6 @@
 
 int sign(float number);
 bool starts_with(char *string, char *start_string);
-float parse_float(char *string, unsigned string_size, int spaces_before);
+float parse_float(char *string, unsigned int string_size, int spaces_before);
 
 #endif /* __COMMON_H */

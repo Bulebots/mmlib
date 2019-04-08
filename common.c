@@ -33,7 +33,7 @@ bool starts_with(char *string, char *start_string)
  * @param[in] string_size Size from the string to parse the float from.
  * @param[in] spaces_before Number of spaces expected before the float.
  */
-float parse_float(char *string, unsigned string_size, int spaces_before)
+float parse_float(char *string, unsigned int string_size, int spaces_before)
 {
 	unsigned int i;
 	char *pointer;

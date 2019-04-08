@@ -71,6 +71,7 @@ static void process_command(char *string)
 void execute_command(void)
 {
 	char *receive_buffer = get_received_serial_buffer();
+
 	if (!get_received_command_flag() || receive_buffer[0] == '\0')
 		return;
 	process_command(receive_buffer);
