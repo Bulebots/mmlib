@@ -1,0 +1,26 @@
+dist: xenial
+
+language: python
+
+python:
+    - 3.7
+
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-trusty-6.0
+      - sourceline: 'ppa:team-gcc-arm-embedded/ppa'
+    packages:
+      - clang-format-6.0
+      - gcc-arm-embedded
+
+before_script:
+  - clang-format() { clang-format-6.0 $@; }
+  - export -f clang-format
+
+script:
+  - ./scripts/checkformat_clang.sh
+  - ./scripts/checkformat_checkpatch.sh
+
+notifications:
+  email: false
