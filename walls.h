@@ -6,7 +6,7 @@
 
 #include "detection.h"
 
-void update_distance_readings(uint16_t *on, uint16_t *off);
+void update_distance_readings(void);
 float get_side_left_distance(void);
 float get_side_right_distance(void);
 float get_front_left_distance(void);

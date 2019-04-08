@@ -17,13 +17,13 @@ const float sensors_calibration_b[NUM_SENSOR] = {
  * @brief Calculate and update the distance from each sensor.
  *
  * @note The distances are calculated from the center of the robot.
- *
- * @param[in] on Raw sensor reading with emitter on.
- * @param[in] off Raw sensor reading with emitter off.
  */
-void update_distance_readings(uint16_t *on, uint16_t *off)
+void update_distance_readings(void)
 {
 	uint8_t i = 0;
+	uint16_t on[NUM_SENSOR], off[NUM_SENSOR];
+
+	get_sensors_raw(on, off);
 
 	for (i = 0; i < NUM_SENSOR; i++) {
 		distance[i] =
