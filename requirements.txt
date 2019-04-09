@@ -1,0 +1,6 @@
+doc8
+cffi
+pytest
+flake8
+flake8-quotes
+pdbpp

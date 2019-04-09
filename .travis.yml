@@ -17,10 +17,14 @@ addons:
 before_script:
   - clang-format() { clang-format-6.0 $@; }
   - export -f clang-format
+  - pip install -r requirements.txt
 
 script:
   - ./scripts/checkformat_clang.sh
   - ./scripts/checkformat_checkpatch.sh
+  - pytest -sv
+  - flake8
+  - doc8 README.rst
 
 notifications:
   email: false
