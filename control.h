@@ -3,11 +3,11 @@
 
 #include "mmlib/encoder.h"
 #include "mmlib/hmi.h"
+#include "mmlib/speed.h"
 #include "mmlib/walls.h"
 
 #include "motor.h"
 #include "setup.h"
-#include "speed.h"
 
 float get_kp_linear(void);
 void set_kp_linear(float value);
