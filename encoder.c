@@ -1,9 +1,5 @@
 #include "encoder.h"
 
-/* Physical variables for calibration */
-static volatile float micrometers_per_count = MICROMETERS_PER_COUNT;
-static volatile float wheels_separation = WHEELS_SEPARATION;
-
 /* Difference between the current count and the latest count */
 static volatile int32_t left_diff_count;
 static volatile int32_t right_diff_count;
@@ -22,26 +18,6 @@ static volatile float right_speed;
 
 /* Angular speed, in radians per second */
 static volatile float angular_speed;
-
-float get_micrometers_per_count(void)
-{
-	return micrometers_per_count;
-}
-
-void set_micrometers_per_count(float value)
-{
-	micrometers_per_count = value;
-}
-
-float get_wheels_separation(void)
-{
-	return wheels_separation;
-}
-
-void set_wheels_separation(float value)
-{
-	wheels_separation = value;
-}
 
 /**
  * @brief Read left motor encoder counter difference.
@@ -175,8 +151,11 @@ void update_encoder_readings(void)
 	uint16_t left_count;
 	uint16_t right_count;
 
+	float micrometers_per_count;
+
 	left_count = read_encoder_left();
 	right_count = read_encoder_right();
+	micrometers_per_count = get_micrometers_per_count();
 	left_diff_count =
 	    max_likelihood_counter_diff(left_count, last_left_count);
 	right_diff_count =
@@ -195,7 +174,7 @@ void update_encoder_readings(void)
 		      (micrometers_per_count / MICROMETERS_PER_METER) *
 		      SYSTICK_FREQUENCY_HZ;
 
-	angular_speed = (left_speed - right_speed) / wheels_separation;
+	angular_speed = (left_speed - right_speed) / get_wheels_separation();
 
 	last_left_count = left_count;
 	last_right_count = right_count;
