@@ -4,7 +4,6 @@
 #include "mmlib/calibration.h"
 #include "mmlib/common.h"
 #include "mmlib/logging.h"
-#include "mmlib/speed.h"
 
 #include "config.h"
 #include "serial.h"

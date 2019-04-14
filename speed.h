@@ -7,6 +7,7 @@
 #include "mmlib/move.h"
 #include "mmlib/path.h"
 
+#include "config.h"
 #include "setup.h"
 
 float get_linear_acceleration(void);

@@ -64,7 +64,7 @@ void set_linear_speed_variables(float force, bool run)
 	linear_acceleration = 2 * force / MOUSE_MASS;
 	linear_deceleration = 2 * force / MOUSE_MASS;
 	if (run)
-		max_linear_speed = 2.5;
+		max_linear_speed = get_linear_speed_limit();
 	else
 		max_linear_speed = _calculate_search_linear_speed(force);
 }
