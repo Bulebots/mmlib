@@ -60,14 +60,7 @@ void log_configuration_variables(void)
 {
 	float micrometers_per_count = get_micrometers_per_count();
 	float wheels_separation = get_wheels_separation();
-	float kp_linear = get_kp_linear();
-	float kd_linear = get_kd_linear();
-	float kp_angular = get_kp_angular();
-	float kd_angular = get_kd_angular();
-	float ki_angular_side = get_ki_angular_side();
-	float ki_angular_front = get_ki_angular_front();
-	float kp_angular_side = get_kp_angular_side();
-	float kp_angular_front = get_kp_angular_front();
+	struct control_constants control = get_control_constants();
 
 	LOG_INFO("{\"micrometers_per_count\":%f,"
 		 "\"wheels_separation\":%f,"
@@ -79,9 +72,10 @@ void log_configuration_variables(void)
 		 "\"ki_angular_front\":%f,"
 		 "\"kp_angular_side\":%f,"
 		 "\"kp_angular_front\":%f}",
-		 micrometers_per_count, wheels_separation, kp_linear, kd_linear,
-		 kp_angular, kd_angular, ki_angular_side, ki_angular_front,
-		 kp_angular_side, kp_angular_front);
+		 micrometers_per_count, wheels_separation, control.kp_linear,
+		 control.kd_linear, control.kp_angular, control.kd_angular,
+		 control.ki_angular_side, control.ki_angular_front,
+		 control.kp_angular_side, control.kp_angular_front);
 }
 
 /**

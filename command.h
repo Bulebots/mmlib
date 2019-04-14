@@ -3,7 +3,6 @@
 
 #include "mmlib/calibration.h"
 #include "mmlib/common.h"
-#include "mmlib/control.h"
 #include "mmlib/logging.h"
 #include "mmlib/move.h"
 #include "mmlib/speed.h"

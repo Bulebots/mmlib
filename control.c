@@ -4,14 +4,6 @@ static volatile float target_linear_speed;
 static volatile float ideal_linear_speed;
 static volatile float ideal_angular_speed;
 
-static volatile float kp_linear = 800.;
-static volatile float kd_linear = 1600.;
-static volatile float kp_angular = 5.;
-static volatile float kd_angular = 100.;
-static volatile float ki_angular_front = 200.;
-static volatile float ki_angular_side = 400.;
-static volatile float kp_angular_front = 50.;
-static volatile float kp_angular_side = 200.;
 static volatile float linear_error;
 static volatile float angular_error;
 static volatile float last_linear_error;
@@ -26,85 +18,6 @@ static volatile bool side_sensors_control_enabled;
 static volatile bool front_sensors_control_enabled;
 static volatile float side_sensors_integral;
 static volatile float front_sensors_integral;
-
-float get_kp_linear(void)
-{
-	return kp_linear;
-}
-
-void set_kp_linear(float value)
-{
-	kp_linear = value;
-}
-
-float get_kd_linear(void)
-{
-	return kd_linear;
-}
-void set_kd_linear(float value)
-{
-	kd_linear = value;
-}
-
-float get_kp_angular(void)
-{
-	return kp_angular;
-}
-
-void set_kp_angular(float value)
-{
-	kp_angular = value;
-}
-
-float get_kd_angular(void)
-{
-	return kd_angular;
-}
-
-void set_kd_angular(float value)
-{
-	kd_angular = value;
-}
-
-float get_kp_angular_side(void)
-{
-	return kp_angular_side;
-}
-
-void set_kp_angular_side(float value)
-{
-	kp_angular_side = value;
-}
-
-float get_kp_angular_front(void)
-{
-	return kp_angular_front;
-}
-
-void set_kp_angular_front(float value)
-{
-	kp_angular_front = value;
-}
-
-float get_ki_angular_side(void)
-{
-	return ki_angular_side;
-}
-
-void set_ki_angular_side(float value)
-{
-	ki_angular_side = value;
-}
-
-float get_ki_angular_front(void)
-{
-	return ki_angular_front;
-}
-
-void set_ki_angular_front(float value)
-{
-	ki_angular_front = value;
-}
 
 /**
  * @brief Enable or disable the side sensors control.
@@ -322,6 +235,7 @@ void motor_control(void)
 	float angular_pwm;
 	float side_sensors_feedback;
 	float front_sensors_feedback;
+	struct control_constants control;
 
 	if (!motor_control_enabled_signal)
 		return;
@@ -344,14 +258,17 @@ void motor_control(void)
 	linear_error += ideal_linear_speed - get_measured_linear_speed();
 	angular_error += ideal_angular_speed - get_measured_angular_speed();
 
-	linear_pwm = kp_linear * linear_error +
-		     kd_linear * (linear_error - last_linear_error);
-	angular_pwm = kp_angular * angular_error +
-		      kd_angular * (angular_error - last_angular_error) +
-		      kp_angular_side * side_sensors_feedback +
-		      kp_angular_front * front_sensors_feedback +
-		      ki_angular_side * side_sensors_integral +
-		      ki_angular_front * front_sensors_integral;
+	control = get_control_constants();
+
+	linear_pwm = control.kp_linear * linear_error +
+		     control.kd_linear * (linear_error - last_linear_error);
+	angular_pwm =
+	    control.kp_angular * angular_error +
+	    control.kd_angular * (angular_error - last_angular_error) +
+	    control.kp_angular_side * side_sensors_feedback +
+	    control.kp_angular_front * front_sensors_feedback +
+	    control.ki_angular_side * side_sensors_integral +
+	    control.ki_angular_front * front_sensors_integral;
 
 	pwm_left = (int32_t)(linear_pwm + angular_pwm);
 	pwm_right = (int32_t)(linear_pwm - angular_pwm);

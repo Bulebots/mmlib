@@ -8,6 +8,7 @@
 static void process_command(char *string)
 {
 	LOG_DEBUG("Processing \"%s\"", string);
+	struct control_constants control = get_control_constants();
 
 	if (!strcmp(string, "battery"))
 		log_battery_voltage();
@@ -41,27 +42,37 @@ static void process_command(char *string)
 	else if (starts_with(string, "set angular_acceleration "))
 		set_angular_acceleration(
 		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set kp_linear "))
-		set_kp_linear(parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set kd_linear "))
-		set_kd_linear(parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set kp_angular "))
-		set_kp_angular(parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set kd_angular "))
-		set_kd_angular(parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set ki_angular_side "))
-		set_ki_angular_side(
-		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set ki_angular_front "))
-		set_ki_angular_front(
-		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set kp_angular_side "))
-		set_kp_angular_side(
-		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set kp_angular_front "))
-		set_kp_angular_front(
-		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else
+	else if (starts_with(string, "set kp_linear ")) {
+		control.kp_linear = parse_float(string, RECEIVE_BUFFER_SIZE, 2);
+		set_control_constants(control);
+	} else if (starts_with(string, "set kd_linear ")) {
+		control.kd_linear = parse_float(string, RECEIVE_BUFFER_SIZE, 2);
+		set_control_constants(control);
+	} else if (starts_with(string, "set kp_angular ")) {
+		control.kp_angular =
+		    parse_float(string, RECEIVE_BUFFER_SIZE, 2);
+		set_control_constants(control);
+	} else if (starts_with(string, "set kd_angular ")) {
+		control.kd_angular =
+		    parse_float(string, RECEIVE_BUFFER_SIZE, 2);
+		set_control_constants(control);
+	} else if (starts_with(string, "set ki_angular_side ")) {
+		control.ki_angular_side =
+		    parse_float(string, RECEIVE_BUFFER_SIZE, 2);
+		set_control_constants(control);
+	} else if (starts_with(string, "set ki_angular_front ")) {
+		control.ki_angular_front =
+		    parse_float(string, RECEIVE_BUFFER_SIZE, 2);
+		set_control_constants(control);
+	} else if (starts_with(string, "set kp_angular_side ")) {
+		control.kp_angular_side =
+		    parse_float(string, RECEIVE_BUFFER_SIZE, 2);
+		set_control_constants(control);
+	} else if (starts_with(string, "set kp_angular_front ")) {
+		control.kp_angular_front =
+		    parse_float(string, RECEIVE_BUFFER_SIZE, 2);
+		set_control_constants(control);
+	} else
 		LOG_ERROR("Unknown command: `%s`!", string);
 }
 

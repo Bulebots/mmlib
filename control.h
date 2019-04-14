@@ -9,22 +9,6 @@
 #include "motor.h"
 #include "setup.h"
 
-float get_kp_linear(void);
-void set_kp_linear(float value);
-float get_kd_linear(void);
-void set_kd_linear(float value);
-float get_kp_angular(void);
-void set_kp_angular(float value);
-float get_kd_angular(void);
-void set_kd_angular(float value);
-float get_kp_angular_side(void);
-void set_kp_angular_side(float value);
-float get_kp_angular_front(void);
-void set_kp_angular_front(float value);
-float get_ki_angular_side(void);
-void set_ki_angular_side(float value);
-float get_ki_angular_front(void);
-void set_ki_angular_front(float value);
 void side_sensors_control(bool value);
 void front_sensors_control(bool value);
 bool collision_detected(void);
