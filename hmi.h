@@ -3,25 +3,25 @@
 
 #include "mmlib/clock.h"
 #include "mmlib/music.h"
-#include "mmlib/solve.h"
-#include "mmlib/speed.h"
 #include "mmlib/walls.h"
 
 #include "buttons.h"
 #include "leds.h"
 
+enum button_response { BUTTON_NONE = 0, BUTTON_SHORT, BUTTON_LONG };
+enum button_action { CLICK_SHORT = BUTTON_SHORT, CLICK_LONG = BUTTON_LONG };
+
 void repeat_blink(uint8_t count, uint16_t time);
 void blink_collision(void);
 void speaker_warn_low_battery(void);
 void speaker_play_error(void);
+void speaker_play_beeps(uint8_t beeps);
 void speaker_play_success(void);
-void speaker_play_button(void);
 void speaker_play_competition(void);
-bool button_left_read_consecutive(uint32_t count);
-bool button_right_read_consecutive(uint32_t count);
+enum button_response button_user_response(void);
+enum button_action button_user_wait_action(void);
 void wait_front_sensor_close_signal(float close_distance);
-void initialize_solver_direction(void);
-bool reuse_maze(void);
+void configure_solver_direction(void);
 float hmi_configure_force(float minimum_force, float force_step);
 
 #endif /* __HMI_H */

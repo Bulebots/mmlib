@@ -39,39 +39,66 @@ void blink_collision(void)
 }
 
 /**
- * @brief Read left button, requiring consecutive positive reads.
+ * @brief Read user button, requiring consecutive positive reads.
  *
- * Readings are performed each system clock tick.
+ * @param[in] limit Maximum number of seconds (returns anyway when reached).
  *
- * @param[in] count Required number of positive reads.
+ * @return Seconds of consecutive positive reads.
  */
-bool button_left_read_consecutive(uint32_t count)
+static float button_user_count_seconds(float limit)
 {
-	uint32_t initial_ticks = get_clock_ticks();
-
-	while (get_clock_ticks() - initial_ticks < count) {
-		if (!button_left_read())
-			return false;
+	stopwatch_start();
+	while (stopwatch_stop() < limit) {
+		if (!button_read_user())
+			break;
 	}
-	return true;
+	return stopwatch_stop();
 }
 
 /**
- * @brief Read right button, requiring consecutive positive reads.
+ * @brief Check for any user button response.
  *
- * Readings are performed each system clock tick.
+ * A user button response can either be an action or no-response.
  *
- * @param[in] count Required number of positive reads.
+ * @return The user button response.
  */
-bool button_right_read_consecutive(uint32_t count)
+enum button_response button_user_response(void)
 {
-	uint32_t initial_ticks = get_clock_ticks();
+	float readings = button_user_count_seconds(.5);
 
-	while (get_clock_ticks() - initial_ticks < count) {
-		if (!button_right_read())
-			return false;
+	if (readings < 0.05)
+		return BUTTON_NONE;
+	if (readings < 0.3) {
+		speaker_play_beeps(1);
+		return BUTTON_SHORT;
 	}
-	return true;
+	led_left_on();
+	led_right_on();
+	while (button_read_user())
+		;
+	led_left_off();
+	led_right_off();
+	speaker_play_beeps(2);
+	return BUTTON_LONG;
+}
+
+/**
+ * @brief Wait for an user button action.
+ *
+ * This function blocks until an action is detected.
+ *
+ * @return The action that was detected.
+ */
+enum button_action button_user_wait_action(void)
+{
+	enum button_response action;
+
+	while (1) {
+		action = button_user_response();
+		if (action == BUTTON_NONE)
+			continue;
+		return (enum button_action)action;
+	}
 }
 
 /**
@@ -94,25 +121,26 @@ void speaker_play_error(void)
 }
 
 /**
- * @brief Play three fast, high tones to note a successful operation.
+ * @brief Play consecutive beeps.
+ *
+ * A beep is a short, high tone followed by a short silence.
+ *
+ * @param[in] beeps Number of beeps to play.
  */
-void speaker_play_success(void)
+void speaker_play_beeps(uint8_t beeps)
 {
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < beeps; i++) {
 		music_play('C', 8, 0, 0.05);
 		sleep_ticks(50);
 	}
 }
 
 /**
- * @brief Play two fast, high tones to note that a button is pushed.
+ * @brief Play three fast, high tones to note a successful operation.
  */
-void speaker_play_button(void)
+void speaker_play_success(void)
 {
-	for (int i = 0; i < 2; i++) {
-		music_play('C', 8, 0, 0.05);
-		sleep_ticks(50);
-	}
+	speaker_play_beeps(3);
 }
 
 /**
@@ -147,23 +175,20 @@ void wait_front_sensor_close_signal(float close_distance)
 }
 
 /**
- * @brief Set initial search direction for the solver.
+ * @brief Configure initial search direction for the solver.
  */
-void initialize_solver_direction(void)
+void configure_solver_direction(void)
 {
-	while (1) {
-		if (button_left_read_consecutive(500)) {
-			set_search_initial_direction(NORTH);
-			led_left_on();
-			break;
-		}
-		if (button_right_read_consecutive(500)) {
-			set_search_initial_direction(EAST);
-			led_right_on();
-			break;
-		}
+	switch (button_user_wait_action()) {
+	case BUTTON_SHORT:
+		set_search_initial_direction(NORTH);
+		led_left_on();
+		break;
+	case BUTTON_LONG:
+		set_search_initial_direction(EAST);
+		led_right_on();
+		break;
 	}
-	sleep_ticks(2000);
 }
 
 /**
@@ -181,46 +206,19 @@ float hmi_configure_force(float minimum_force, float force_step)
 	uint8_t force = 0;
 
 	while (1) {
-		if (button_right_read_consecutive(500)) {
+		switch (button_user_wait_action()) {
+		case BUTTON_SHORT:
 			if (force == 10)
 				force = 0;
 			else
 				force += 1;
-			repeat_blink(force, 300);
-		}
-		if (button_left_read_consecutive(1000)) {
+			repeat_blink(force, 200);
+			break;
+		case BUTTON_LONG:
 			led_left_on();
 			led_right_on();
-			sleep_ticks(2000);
+			sleep_ticks(1000);
 			return force * force_step + minimum_force;
 		}
 	}
-}
-
-/**
- * @brief Function to choose if reuse the saved EEPROM maze.
- *
- * @return true if the maze saved on EEPROM is restored to RAM.
- */
-bool reuse_maze(void)
-{
-	if (maze_is_saved()) {
-		led_bluepill_on();
-		while (1) {
-			if (button_left_read_consecutive(500)) {
-				speaker_play_button();
-				sleep_seconds(1);
-				load_maze();
-				return true;
-			}
-			if (button_right_read_consecutive(500)) {
-				speaker_play_button();
-				sleep_seconds(1);
-				reset_maze();
-				break;
-			}
-		}
-	}
-	led_bluepill_off();
-	return false;
 }
