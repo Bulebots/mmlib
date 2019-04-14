@@ -33,15 +33,6 @@ static void process_command(char *string)
 	else if (starts_with(string, "set max_linear_speed "))
 		set_max_linear_speed(
 		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set linear_acceleration "))
-		set_linear_acceleration(
-		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set linear_deceleration "))
-		set_linear_deceleration(
-		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set angular_acceleration "))
-		set_angular_acceleration(
-		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
 	else if (starts_with(string, "set kp_linear ")) {
 		control.kp_linear = parse_float(string, RECEIVE_BUFFER_SIZE, 2);
 		set_control_constants(control);
