@@ -1,6 +1,5 @@
 #include "move.h"
 
-/* Assume the mouse tail is initially touching a wall */
 static int32_t current_cell_start_micrometers;
 
 /**
@@ -15,6 +14,11 @@ float current_cell_shift(void)
 	       MICROMETERS_PER_METER;
 }
 
+/**
+ * @brief Initialize mouse position
+ *
+ *  Assume the mouse tail is initially touching a wall.
+ */
 void set_starting_position(void)
 {
 	current_cell_start_micrometers =
