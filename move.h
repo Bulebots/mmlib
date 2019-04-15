@@ -31,5 +31,6 @@ void parametric_move_front(float distance, float end_linear_speed);
 void move_side(enum movement turn, float force);
 void move_back(float force);
 void move(enum step_direction direction, float force);
+void inplace_turn(float radians, float force);
 
 #endif /* __MOVE_H */
