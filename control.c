@@ -36,6 +36,24 @@ void front_sensors_control(bool value)
 }
 
 /**
+ * @brief Activation of sensors control depending on walls around.
+ */
+void enable_walls_control(void)
+{
+	front_sensors_control(front_wall_detection());
+	side_sensors_control((right_wall_detection() || left_wall_detection()));
+}
+
+/**
+ * @brief Disable sensors control.
+ */
+void disable_walls_control(void)
+{
+	side_sensors_control(false);
+	front_sensors_control(false);
+}
+
+/**
  * @brief Set collision detected signal.
  *
  * It also automatically disables the motor control.
@@ -125,6 +143,22 @@ void enable_motor_control(void)
 void disable_motor_control(void)
 {
 	motor_control_enabled_signal = false;
+}
+
+/**
+ * @brief Reset motion to an iddle state.
+ *
+ * - Disable motor control.
+ * - Disable walls control.
+ * - Turn the motor driver off.
+ * - Reset control state.
+ */
+void reset_motion(void)
+{
+	disable_motor_control();
+	disable_walls_control();
+	drive_off();
+	reset_control_all();
 }
 
 /**

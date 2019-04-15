@@ -19,7 +19,6 @@ void set_starting_position(void);
 int32_t required_micrometers_to_speed(float speed);
 float required_time_to_speed(float speed);
 uint32_t required_ticks_to_speed(float speed);
-void disable_walls_control(void);
 void target_straight(int32_t start, float distance, float speed);
 void keep_front_wall_distance(float distance);
 void stop_end(void);
@@ -33,6 +32,5 @@ void parametric_move_front(float distance, float end_linear_speed);
 void move_side(enum movement turn, float force);
 void move_back(float force);
 void move(enum step_direction direction, float force);
-void reset_motion(void);
 
 #endif /* __MOVE_H */

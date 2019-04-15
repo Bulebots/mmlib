@@ -96,24 +96,6 @@ uint32_t required_ticks_to_speed(float speed)
 }
 
 /**
- * @brief Activation of sensors control depending on walls around.
- */
-static void enable_walls_control(void)
-{
-	front_sensors_control(front_wall_detection());
-	side_sensors_control((right_wall_detection() || left_wall_detection()));
-}
-
-/**
- * @brief Disable sensors control.
- */
-void disable_walls_control(void)
-{
-	side_sensors_control(false);
-	front_sensors_control(false);
-}
-
-/**
  * @brief Reach a target position at a target speed.
  *
  * @param[in] start Starting point, in micrometers.
@@ -381,20 +363,4 @@ void move(enum step_direction direction, float force)
 		move_back(force);
 	else
 		stop_middle();
-}
-
-/**
- * @brief Reset motion to an iddle state.
- *
- * - Disable motor control.
- * - Disable walls control.
- * - Turn the motor driver off.
- * - Reset control state.
- */
-void reset_motion(void)
-{
-	disable_motor_control();
-	disable_walls_control();
-	drive_off();
-	reset_control_all();
 }
