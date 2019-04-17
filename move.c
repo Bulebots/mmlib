@@ -7,11 +7,32 @@ static int32_t current_cell_start_micrometers;
  *
  * The shift is the traveled distance since the start of the cell.
  */
-float current_cell_shift(void)
+static float _current_cell_shift(void)
 {
 	return (float)(get_encoder_average_micrometers() -
 		       current_cell_start_micrometers) /
 	       MICROMETERS_PER_METER;
+}
+
+/**
+ * @brief Mark the beginning of a new cell.
+ *
+ * It should be executed right after entering a new cell.
+ *
+ * Takes into account a possible front-wall longitudinal correction.
+ */
+static void _entered_next_cell(void)
+{
+	int32_t front_wall_correction;
+
+	current_cell_start_micrometers = get_encoder_average_micrometers();
+	if (front_wall_detection()) {
+		front_wall_correction =
+		    (int32_t)((get_front_wall_distance() - CELL_DIMENSION) *
+			      MICROMETERS_PER_METER);
+		current_cell_start_micrometers += front_wall_correction;
+	}
+	led_left_toggle();
 }
 
 /**
@@ -24,27 +45,6 @@ void set_starting_position(void)
 	current_cell_start_micrometers =
 	    get_encoder_average_micrometers() -
 	    MOUSE_START_SHIFT * MICROMETERS_PER_METER;
-}
-
-/**
- * @brief Mark the beginning of a new cell.
- *
- * It should be executed right after entering a new cell.
- *
- * Takes into account a possible front-wall longitudinal correction.
- */
-static void entered_next_cell(void)
-{
-	int32_t front_wall_correction;
-
-	current_cell_start_micrometers = get_encoder_average_micrometers();
-	if (front_wall_detection()) {
-		front_wall_correction =
-		    (int32_t)((get_front_wall_distance() - CELL_DIMENSION) *
-			      MICROMETERS_PER_METER);
-		current_cell_start_micrometers += front_wall_correction;
-	}
-	led_left_toggle();
 }
 
 /**
@@ -206,7 +206,7 @@ void stop_end(void)
 	target_straight(current_cell_start_micrometers, CELL_DIMENSION, 0.);
 	disable_walls_control();
 	reset_control_errors();
-	entered_next_cell();
+	_entered_next_cell();
 }
 
 /**
@@ -269,7 +269,7 @@ void turn_to_start_position(float force)
 	set_linear_deceleration(get_linear_deceleration() / 4.);
 
 	turn_back(force);
-	distance = MOUSE_START_SHIFT - current_cell_shift();
+	distance = MOUSE_START_SHIFT - _current_cell_shift();
 	target_straight(get_encoder_average_micrometers(), distance, 0.);
 
 	set_linear_acceleration(get_linear_acceleration() * 4.);
@@ -289,7 +289,7 @@ void move_front(void)
 	enable_walls_control();
 	target_straight(current_cell_start_micrometers, CELL_DIMENSION,
 			get_max_linear_speed());
-	entered_next_cell();
+	_entered_next_cell();
 }
 
 /**
@@ -302,7 +302,7 @@ void move_front_many(int cells)
 	side_sensors_control(true);
 	target_straight(current_cell_start_micrometers, CELL_DIMENSION * cells,
 			get_max_linear_speed());
-	entered_next_cell();
+	_entered_next_cell();
 }
 
 /**
@@ -334,7 +334,7 @@ void move_side(enum movement turn, float force)
 	enable_walls_control();
 	target_straight(get_encoder_average_micrometers(),
 			get_move_turn_after(turn), get_max_linear_speed());
-	entered_next_cell();
+	_entered_next_cell();
 }
 
 /**

@@ -14,7 +14,6 @@
 #include "motor.h"
 #include "setup.h"
 
-float current_cell_shift(void);
 void set_starting_position(void);
 int32_t required_micrometers_to_speed(float speed);
 float required_time_to_speed(float speed);
