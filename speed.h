@@ -5,6 +5,7 @@
 
 #include "mmlib/common.h"
 #include "mmlib/control.h"
+#include "mmlib/move.h"
 #include "mmlib/path.h"
 
 #include "config.h"
