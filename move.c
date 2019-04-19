@@ -1,7 +1,7 @@
 #include "move.h"
 
 static int32_t current_cell_start_micrometers;
-/* - Angular acceleration is defined in radians per second squared.*/
+/* Angular acceleration is defined in radians per second squared. */
 static float angular_acceleration;
 
 /**
@@ -38,9 +38,9 @@ static void _entered_next_cell(void)
 }
 
 /**
- * @brief Initialize mouse position
+ * @brief Initialize mouse position.
  *
- *  Assume the mouse tail is initially touching a wall.
+ * Assumes the mouse tail is initially touching a wall.
  */
 void set_starting_position(void)
 {
