@@ -6,6 +6,7 @@
 #include "mmlib/clock.h"
 #include "mmlib/control.h"
 #include "mmlib/hmi.h"
+#include "mmlib/logging.h"
 #include "mmlib/path.h"
 #include "mmlib/search.h"
 #include "mmlib/speed.h"
@@ -32,5 +33,7 @@ void move_side(enum movement turn, float force);
 void move_back(float force);
 void move(enum step_direction direction, float force);
 void inplace_turn(float radians, float force);
+void execute_movement_sequence(char *sequence, float force,
+			       enum path_language language);
 
 #endif /* __MOVE_H */

@@ -2,12 +2,12 @@
 #define __SOLVE_H
 
 #include "mmlib/logging.h"
+#include "mmlib/move.h"
 #include "mmlib/path.h"
 #include "mmlib/search.h"
 #include "mmlib/walls.h"
 
 #include "eeprom.h"
-#include "move.h"
 #include "setup.h"
 
 void explore(float force);
