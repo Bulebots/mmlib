@@ -14,6 +14,7 @@ float get_front_right_distance(void);
 float get_side_sensors_close_error(void);
 float get_side_sensors_far_error(void);
 float get_front_sensors_error(void);
+float get_diagonal_sensors_error(void);
 float get_front_wall_distance(void);
 bool front_wall_detection(void);
 bool right_wall_detection(void);

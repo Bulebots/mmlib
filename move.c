@@ -137,6 +137,38 @@ void target_straight(int32_t start, float distance, float speed)
 }
 
 /**
+ * @brief Reach a target position at a target speed on a diagonal.
+ *
+ * @param[in] start Starting point, in micrometers.
+ * @param[in] distance Distance to travel, in meters, from the starting point.
+ * @param[in] control_distance Distance with control, in meters, from the
+ * starting point.
+ * @param[in] speed Target speed, in meters per second.
+ */
+static void target_straight_diagonal(int32_t start, float distance,
+				     float control_distance, float speed)
+{
+	int32_t target_distance, target_control_distance;
+
+	set_ideal_angular_speed(0.);
+	target_distance = start + (int32_t)(distance * MICROMETERS_PER_METER);
+	target_control_distance =
+	    start + (int32_t)(control_distance * MICROMETERS_PER_METER);
+	diagonal_sensors_control(true);
+	set_target_linear_speed(get_max_linear_speed());
+	while (get_encoder_average_micrometers() <
+	       target_distance - required_micrometers_to_speed(speed)) {
+		if (get_encoder_average_micrometers() > target_control_distance)
+			diagonal_sensors_control(false);
+	};
+	set_target_linear_speed(speed);
+	while (get_encoder_average_micrometers() < target_distance) {
+		if (get_encoder_average_micrometers() > target_control_distance)
+			diagonal_sensors_control(false);
+	};
+}
+
+/**
  * @brief Wait until the robot is perpendicular with respect to the front wall.
  *
  * @param[in] error Allowed error, in meters.
@@ -313,6 +345,21 @@ void parametric_move_front(float distance, float end_linear_speed)
 {
 	target_straight(get_encoder_average_micrometers(), distance,
 			end_linear_speed);
+}
+
+/**
+ * @brief Move diagonal a defined control and total distance ending at a
+ * defined speed.
+ *
+ * @param[in] distance Distance to travel.
+ * @param[in] control_distance Distance with control enabled
+ * @param[in] end_linear_speed Speed at which to end the movement.
+ */
+void parametric_move_diagonal(float distance, float control_distance,
+			      float end_linear_speed)
+{
+	target_straight_diagonal(get_encoder_average_micrometers(), distance,
+				 control_distance, end_linear_speed);
 }
 
 /**
@@ -493,8 +540,8 @@ void execute_movement_sequence(char *sequence, float force,
 			distance += get_move_turn_before(movement);
 			side_sensors_close_control(false);
 			side_sensors_far_control(false);
-			parametric_move_front(
-			    distance,
+			parametric_move_diagonal(
+			    distance, (distance - CELL_DIAGONAL * 2),
 			    get_move_turn_linear_speed(movement, force));
 			speed_turn(movement, force);
 			distance = get_move_turn_after(movement);

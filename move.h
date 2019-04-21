@@ -28,6 +28,8 @@ void turn_back(float force);
 void turn_to_start_position(float force);
 void move_front(void);
 void parametric_move_front(float distance, float end_linear_speed);
+void parametric_move_diagonal(float distance, float control_distance,
+			      float end_linear_speed);
 void move_side(enum movement turn, float force);
 void move_back(float force);
 void move(enum step_direction direction, float force);

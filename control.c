@@ -17,8 +17,10 @@ static volatile bool motor_control_enabled_signal;
 static volatile bool side_sensors_close_control_enabled;
 static volatile bool side_sensors_far_control_enabled;
 static volatile bool front_sensors_control_enabled;
+static volatile bool diagonal_sensors_control_enabled;
 static volatile float side_sensors_integral;
 static volatile float front_sensors_integral;
+static volatile float diagonal_sensors_integral;
 
 /**
  * @brief Enable or disable the side sensors close control.
@@ -34,6 +36,14 @@ void side_sensors_close_control(bool value)
 void side_sensors_far_control(bool value)
 {
 	side_sensors_far_control_enabled = value;
+}
+
+/**
+ * @brief Enable or disable the diagonal control.
+ */
+void diagonal_sensors_control(bool value)
+{
+	diagonal_sensors_control_enabled = value;
 }
 
 /**
@@ -92,6 +102,7 @@ void reset_control_errors(void)
 {
 	side_sensors_integral = 0;
 	front_sensors_integral = 0;
+	diagonal_sensors_integral = 0;
 	linear_error = 0;
 	angular_error = 0;
 	last_linear_error = 0;
@@ -270,6 +281,7 @@ void motor_control(void)
 	float angular_pwm;
 	float side_sensors_feedback = 0.;
 	float front_sensors_feedback = 0.;
+	float diagonal_sensors_feedback = 0.;
 	struct control_constants control;
 
 	if (!motor_control_enabled_signal)
@@ -290,6 +302,11 @@ void motor_control(void)
 		front_sensors_integral += front_sensors_feedback;
 	}
 
+	if (diagonal_sensors_control_enabled) {
+		diagonal_sensors_feedback = get_diagonal_sensors_error();
+		diagonal_sensors_integral += diagonal_sensors_feedback;
+	}
+
 	linear_error += ideal_linear_speed - get_measured_linear_speed();
 	angular_error += ideal_angular_speed - get_measured_angular_speed();
 
@@ -302,8 +319,10 @@ void motor_control(void)
 	    control.kd_angular * (angular_error - last_angular_error) +
 	    control.kp_angular_side * side_sensors_feedback +
 	    control.kp_angular_front * front_sensors_feedback +
+	    control.kp_angular_diagonal * diagonal_sensors_feedback +
 	    control.ki_angular_side * side_sensors_integral +
-	    control.ki_angular_front * front_sensors_integral;
+	    control.ki_angular_front * front_sensors_integral +
+	    control.ki_angular_diagonal * diagonal_sensors_integral;
 
 	pwm_left = (int32_t)(linear_pwm + angular_pwm);
 	pwm_right = (int32_t)(linear_pwm - angular_pwm);
