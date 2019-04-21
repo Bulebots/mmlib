@@ -6,6 +6,7 @@
 #include "mmlib/clock.h"
 #include "mmlib/control.h"
 #include "mmlib/hmi.h"
+#include "mmlib/logging.h"
 #include "mmlib/path.h"
 #include "mmlib/search.h"
 #include "mmlib/speed.h"
@@ -28,6 +29,8 @@ void turn_to_start_position(float force);
 void move_front(void);
 void move_front_many(int cells);
 void parametric_move_front(float distance, float end_linear_speed);
+void parametric_move_diagonal(float distance, float control_distance,
+			      float end_linear_speed);
 void move_side(enum movement turn, float force);
 void move_back(float force);
 void move(enum step_direction direction, float force);

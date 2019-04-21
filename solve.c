@@ -172,8 +172,8 @@ static void execute_movement_sequence(char *sequence, float force,
 		case MOVE_RIGHT_DIAGONAL:
 			distance += get_move_turn_before(movement);
 			side_sensors_control(false);
-			parametric_move_front(
-			    distance,
+			parametric_move_diagonal(
+			    distance, (distance - CELL_DIAGONAL * 2),
 			    get_move_turn_linear_speed(movement, force));
 			speed_turn(movement, force);
 			distance = get_move_turn_after(movement);

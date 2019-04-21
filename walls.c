@@ -3,6 +3,7 @@
 #define SIDE_WALL_DETECTION (CELL_DIMENSION * 0.90)
 #define FRONT_WALL_DETECTION (CELL_DIMENSION * 1.5)
 #define SIDE_CALIBRATION_READINGS 20
+#define DIAGONAL_MIN_DISTANCE 0.24
 
 static volatile float distance[NUM_SENSOR];
 static volatile float calibration_factor[NUM_SENSOR];
@@ -101,6 +102,28 @@ float get_side_sensors_error(void)
 float get_front_sensors_error(void)
 {
 	return distance[SENSOR_FRONT_LEFT_ID] - distance[SENSOR_FRONT_RIGHT_ID];
+}
+
+/**
+ * @brief Calculate and return the diagonal sensors error.
+ *
+ * This function returns an error if the robot is too close to a pillar. The
+ * error is calculated as the difference between the sensed distance and a
+ * minimum distance threshold.
+ */
+float get_diagonal_sensors_error(void)
+{
+	float left_error;
+	float right_error;
+
+	left_error = distance[SENSOR_FRONT_LEFT_ID] - DIAGONAL_MIN_DISTANCE;
+	right_error = distance[SENSOR_FRONT_RIGHT_ID] - DIAGONAL_MIN_DISTANCE;
+
+	if (right_error < 0.)
+		return right_error;
+	if (left_error < 0.)
+		return -left_error;
+	return 0.;
 }
 
 /**
