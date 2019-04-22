@@ -14,17 +14,26 @@ static volatile int32_t pwm_right;
 
 static volatile bool collision_detected_signal;
 static volatile bool motor_control_enabled_signal;
-static volatile bool side_sensors_control_enabled;
+static volatile bool side_sensors_close_control_enabled;
+static volatile bool side_sensors_far_control_enabled;
 static volatile bool front_sensors_control_enabled;
 static volatile float side_sensors_integral;
 static volatile float front_sensors_integral;
 
 /**
- * @brief Enable or disable the side sensors control.
+ * @brief Enable or disable the side sensors close control.
  */
-void side_sensors_control(bool value)
+void side_sensors_close_control(bool value)
 {
-	side_sensors_control_enabled = value;
+	side_sensors_close_control_enabled = value;
+}
+
+/**
+ * @brief Enable or disable the side sensors far control.
+ */
+void side_sensors_far_control(bool value)
+{
+	side_sensors_far_control_enabled = value;
 }
 
 /**
@@ -36,20 +45,12 @@ void front_sensors_control(bool value)
 }
 
 /**
- * @brief Activation of sensors control depending on walls around.
- */
-void enable_walls_control(void)
-{
-	front_sensors_control(front_wall_detection());
-	side_sensors_control((right_wall_detection() || left_wall_detection()));
-}
-
-/**
  * @brief Disable sensors control.
  */
 void disable_walls_control(void)
 {
-	side_sensors_control(false);
+	side_sensors_close_control(false);
+	side_sensors_far_control(false);
 	front_sensors_control(false);
 }
 
@@ -267,26 +268,26 @@ void motor_control(void)
 {
 	float linear_pwm;
 	float angular_pwm;
-	float side_sensors_feedback;
-	float front_sensors_feedback;
+	float side_sensors_feedback = 0.;
+	float front_sensors_feedback = 0.;
 	struct control_constants control;
 
 	if (!motor_control_enabled_signal)
 		return;
 
-	if (side_sensors_control_enabled) {
-		side_sensors_feedback = get_side_sensors_error();
+	if (side_sensors_close_control_enabled) {
+		side_sensors_feedback += get_side_sensors_close_error();
 		side_sensors_integral += side_sensors_feedback;
-	} else {
-		side_sensors_feedback = 0;
+	}
+
+	if (side_sensors_far_control_enabled) {
+		side_sensors_feedback += get_side_sensors_far_error();
+		side_sensors_integral += side_sensors_feedback;
 	}
 
 	if (front_sensors_control_enabled) {
 		front_sensors_feedback = get_front_sensors_error();
 		front_sensors_integral += front_sensors_feedback;
-
-	} else {
-		front_sensors_feedback = 0;
 	}
 
 	linear_error += ideal_linear_speed - get_measured_linear_speed();

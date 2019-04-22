@@ -176,7 +176,8 @@ void keep_front_wall_distance(float distance)
 
 	while (true) {
 		front_sensors_control(true);
-		side_sensors_control(false);
+		side_sensors_close_control(false);
+		side_sensors_far_control(false);
 
 		wait_front_perpendicular(KEEP_FRONT_DISTANCE_TOLERANCE);
 
@@ -204,7 +205,9 @@ void keep_front_wall_distance(float distance)
  */
 void stop_end(void)
 {
-	enable_walls_control();
+	front_sensors_control(true);
+	side_sensors_close_control(true);
+	side_sensors_far_control(false);
 	target_straight(current_cell_start_micrometers, CELL_DIMENSION, 0.);
 	disable_walls_control();
 	reset_control_errors();
@@ -218,7 +221,9 @@ void stop_head_front_wall(void)
 {
 	float distance = CELL_DIMENSION - WALL_WIDTH / 2. - MOUSE_HEAD;
 
-	enable_walls_control();
+	front_sensors_control(true);
+	side_sensors_close_control(true);
+	side_sensors_far_control(false);
 	target_straight(current_cell_start_micrometers, distance, 0.);
 	disable_walls_control();
 	reset_control_errors();
@@ -231,7 +236,9 @@ void stop_middle(void)
 {
 	float distance = CELL_DIMENSION / 2.;
 
-	enable_walls_control();
+	front_sensors_control(true);
+	side_sensors_close_control(true);
+	side_sensors_far_control(false);
 	target_straight(current_cell_start_micrometers, distance, 0.);
 	disable_walls_control();
 	reset_control_errors();
@@ -288,7 +295,9 @@ void turn_to_start_position(float force)
  */
 void move_front(void)
 {
-	enable_walls_control();
+	front_sensors_control(true);
+	side_sensors_close_control(true);
+	side_sensors_far_control(false);
 	target_straight(current_cell_start_micrometers, CELL_DIMENSION,
 			get_max_linear_speed());
 	_entered_next_cell();
@@ -301,7 +310,8 @@ void move_front(void)
  */
 void move_front_many(int cells)
 {
-	side_sensors_control(true);
+	side_sensors_close_control(true);
+	side_sensors_far_control(true);
 	target_straight(current_cell_start_micrometers, CELL_DIMENSION * cells,
 			get_max_linear_speed());
 	_entered_next_cell();
@@ -327,13 +337,17 @@ void parametric_move_front(float distance, float end_linear_speed)
  */
 void move_side(enum movement turn, float force)
 {
-	enable_walls_control();
+	front_sensors_control(true);
+	side_sensors_close_control(true);
+	side_sensors_far_control(true);
 	target_straight(current_cell_start_micrometers,
 			get_move_turn_before(turn),
 			get_move_turn_linear_speed(turn, force));
 	disable_walls_control();
 	speed_turn(turn, force);
-	enable_walls_control();
+	front_sensors_control(true);
+	side_sensors_close_control(true);
+	side_sensors_far_control(true);
 	target_straight(get_encoder_average_micrometers(),
 			get_move_turn_after(turn), get_max_linear_speed());
 	_entered_next_cell();
@@ -476,7 +490,8 @@ void execute_movement_sequence(char *sequence, float force,
 		case MOVE_LEFT_TO_135:
 		case MOVE_RIGHT_TO_135:
 			distance += get_move_turn_before(movement);
-			side_sensors_control(true);
+			side_sensors_close_control(true);
+			side_sensors_far_control(false);
 			parametric_move_front(
 			    distance,
 			    get_move_turn_linear_speed(movement, force));
@@ -490,7 +505,8 @@ void execute_movement_sequence(char *sequence, float force,
 		case MOVE_LEFT_DIAGONAL:
 		case MOVE_RIGHT_DIAGONAL:
 			distance += get_move_turn_before(movement);
-			side_sensors_control(false);
+			side_sensors_close_control(false);
+			side_sensors_far_control(false);
 			parametric_move_front(
 			    distance,
 			    get_move_turn_linear_speed(movement, force));
@@ -499,7 +515,8 @@ void execute_movement_sequence(char *sequence, float force,
 			break;
 		case MOVE_STOP:
 			distance -= CELL_DIMENSION / 2;
-			side_sensors_control(true);
+			side_sensors_close_control(true);
+			side_sensors_far_control(false);
 			parametric_move_front(distance, 0.);
 			turn_to_start_position(force);
 			speaker_play_success();

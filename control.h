@@ -9,7 +9,8 @@
 #include "motor.h"
 #include "setup.h"
 
-void side_sensors_control(bool value);
+void side_sensors_close_control(bool value);
+void side_sensors_far_control(bool value);
 void front_sensors_control(bool value);
 void enable_walls_control(void);
 void disable_walls_control(void);
