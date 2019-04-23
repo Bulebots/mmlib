@@ -113,10 +113,14 @@ float get_side_sensors_far_error(void)
  * @brief Calculate and return the front sensors error.
  *
  * Taking into account that robot is approaching to a perpendicular wall, this
- * function returns the difference between the front sensors distances
+ * function returns the difference between the front sensors distances.
+ *
+ * If there is no front wall detected, it returns 0.
  */
 float get_front_sensors_error(void)
 {
+	if (!front_wall_detection())
+		return 0.;
 	return distance[SENSOR_FRONT_LEFT_ID] - distance[SENSOR_FRONT_RIGHT_ID];
 }
 
