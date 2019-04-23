@@ -192,36 +192,6 @@ void log_data_control(void)
 }
 
 /**
- * @brief Log front sensors distances and error.
- */
-void log_front_sensors_error(void)
-{
-	float sensors_error = get_front_sensors_error();
-	float fl_dist = get_front_left_distance();
-	float fr_dist = get_front_right_distance();
-
-	LOG_INFO("{\"front_sensors_error\":%f,"
-		 "\"front_left_distance\":%f,"
-		 "\"front_right_distance\":%f}",
-		 sensors_error, fl_dist, fr_dist);
-}
-
-/**
- * @brief Log side sensors distances and error.
- */
-void log_side_sensors_error(void)
-{
-	float sensors_error = get_side_sensors_error();
-	float sl_dist = get_side_left_distance();
-	float sr_dist = get_side_right_distance();
-
-	LOG_INFO("{\"front_sensors_error\":%f,"
-		 "\"side_left_distance\":%f,"
-		 "\"side_right_distance\":%f}",
-		 sensors_error, sl_dist, sr_dist);
-}
-
-/**
  * @brief Log the result of walls detection.
  */
 void log_walls_detection(void)
