@@ -304,20 +304,6 @@ void move_front(void)
 }
 
 /**
- * @brief Move front many cells.
- *
- * @param[in] cells Number of cells to move front consecutively.
- */
-void move_front_many(int cells)
-{
-	side_sensors_close_control(true);
-	side_sensors_far_control(true);
-	target_straight(current_cell_start_micrometers, CELL_DIMENSION * cells,
-			get_max_linear_speed());
-	_entered_next_cell();
-}
-
-/**
  * @brief Move front a defined distance ending at a defined speed.
  *
  * @param[in] distance Distance to travel.
