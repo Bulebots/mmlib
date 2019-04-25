@@ -79,6 +79,7 @@ void disable_walls_control(void)
 	side_sensors_close_control(false);
 	side_sensors_far_control(false);
 	front_sensors_control(false);
+	diagonal_sensors_control(false);
 }
 
 /**
