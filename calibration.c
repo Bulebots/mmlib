@@ -180,8 +180,8 @@ void run_front_sensors_calibration(void)
 	float max_force = get_max_force();
 	float distance;
 
+	reset_motion();
 	calibrate();
-	disable_walls_control();
 	enable_motor_control();
 
 	set_max_force(.1);
