@@ -92,7 +92,7 @@ bool collision_detected(void)
 void reset_collision_detection(void)
 {
 	collision_detected_signal = false;
-	reset_pwm_saturation();
+	reset_motor_driver_saturation();
 }
 
 /**
@@ -333,6 +333,7 @@ void motor_control(void)
 	last_linear_error = linear_error;
 	last_angular_error = angular_error;
 
-	if (pwm_saturation() > MAX_PWM_SATURATION_PERIOD * SYSTICK_FREQUENCY_HZ)
+	if (motor_driver_saturation() >
+	    MAX_MOTOR_DRIVER_SATURATION_PERIOD * SYSTICK_FREQUENCY_HZ)
 		set_collision_detected();
 }
