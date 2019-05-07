@@ -8,6 +8,7 @@
 
 #include "motor.h"
 #include "setup.h"
+#include "voltage.h"
 
 void side_sensors_close_control(bool value);
 void side_sensors_far_control(bool value);
@@ -23,6 +24,8 @@ void reset_control_all(void);
 void enable_motor_control(void);
 void disable_motor_control(void);
 void reset_motion(void);
+float get_left_motor_voltage(void);
+float get_right_motor_voltage(void);
 int32_t get_left_pwm(void);
 int32_t get_right_pwm(void);
 float get_target_linear_speed(void);

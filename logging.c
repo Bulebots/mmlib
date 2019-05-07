@@ -85,6 +85,7 @@ void log_configuration_variables(void)
  *
  * - Target linear speed and ideal (expected) linear speed.
  * - Actual speed of both wheels (left and right).
+ * - Motor driver output voltage for both motors.
  * - PWM output value for both motors.
  */
 void log_linear_speed(void)
@@ -93,11 +94,14 @@ void log_linear_speed(void)
 	float right_speed = get_encoder_right_speed();
 	float target_speed = get_target_linear_speed();
 	float ideal_speed = get_ideal_linear_speed();
+	float voltage_left = get_left_motor_voltage();
+	float voltage_right = get_right_motor_voltage();
 	int pwm_left = get_left_pwm();
 	int pwm_right = get_right_pwm();
 
-	LOG_INFO("%f,%f,%f,%f,%d,%d", target_speed, ideal_speed, left_speed,
-		 right_speed, pwm_left, pwm_right);
+	LOG_INFO("%f,%f,%f,%f,%f,%f,%d,%d", target_speed, ideal_speed,
+		 left_speed, right_speed, voltage_left, voltage_right, pwm_left,
+		 pwm_right);
 }
 
 /**
@@ -107,17 +111,20 @@ void log_linear_speed(void)
  *
  * - Target angular speed and ideal (expected) angular speed.
  * - Actual calculated angular speed.
+ * - Motor driver output voltage for both motors.
  * - PWM output value for both motors.
  */
 void log_angular_speed(void)
 {
 	float angular_speed = get_encoder_angular_speed();
 	float ideal_speed = get_ideal_angular_speed();
+	float voltage_left = get_left_motor_voltage();
+	float voltage_right = get_right_motor_voltage();
 	int pwm_left = get_left_pwm();
 	int pwm_right = get_right_pwm();
 
-	LOG_INFO("%f,%f,%d,%d", ideal_speed, angular_speed, pwm_left,
-		 pwm_right);
+	LOG_INFO("%f,%f,%f,%f,%d,%d", ideal_speed, angular_speed, voltage_left,
+		 voltage_right, pwm_left, pwm_right);
 }
 
 /**
@@ -182,13 +189,16 @@ void log_data_control(void)
 	float ideal_angular = get_ideal_angular_speed();
 	float measured_linear = get_measured_linear_speed();
 	float measured_angular = get_measured_angular_speed();
+	float left_voltage = get_left_motor_voltage();
+	float right_voltage = get_right_motor_voltage();
 	int left_pwm = get_left_pwm();
 	int right_pwm = get_right_pwm();
 
-	LOG_DATA("[%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%d,%d]",
+	LOG_DATA("[%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.2f,%.2f,%d,%d]",
 		 front_left_distance, front_right_distance, side_left_distance,
 		 side_right_distance, ideal_linear, measured_linear,
-		 ideal_angular, measured_angular, left_pwm, right_pwm);
+		 ideal_angular, measured_angular, left_voltage, right_voltage,
+		 left_pwm, right_pwm);
 }
 
 /**

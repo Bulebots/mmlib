@@ -9,6 +9,8 @@ static volatile float angular_error;
 static volatile float last_linear_error;
 static volatile float last_angular_error;
 
+static volatile float voltage_left;
+static volatile float voltage_right;
 static volatile int32_t pwm_left;
 static volatile int32_t pwm_right;
 
@@ -21,6 +23,21 @@ static volatile bool diagonal_sensors_control_enabled;
 static volatile float side_sensors_integral;
 static volatile float front_sensors_integral;
 static volatile float diagonal_sensors_integral;
+
+/**
+ * @brief Convert a given voltage to its corresponding motor PWM duty.
+ *
+ * This function reads the current motor driver input voltage first to adjust
+ * the PWM output accordingly. Useful when powering the motor driver directly
+ * from a battery or to compensate for possible voltage drops in DC-DC
+ * converters.
+ *
+ * @param[in] voltage Voltage to convert to its corresponding PWM duty.
+ */
+static int32_t voltage_to_motor_pwm(float voltage)
+{
+	return voltage / get_motor_driver_input_voltage() * DRIVER_PWM_PERIOD;
+}
 
 /**
  * @brief Enable or disable the side sensors close control.
@@ -174,6 +191,22 @@ void reset_motion(void)
 }
 
 /**
+ * @brief Return the current voltage for the left motor.
+ */
+float get_left_motor_voltage(void)
+{
+	return voltage_left;
+}
+
+/**
+ * @brief Return the current voltage for the right motor.
+ */
+float get_right_motor_voltage(void)
+{
+	return voltage_right;
+}
+
+/**
  * @brief Return the current PWM duty for the left motor.
  */
 int32_t get_left_pwm(void)
@@ -277,8 +310,8 @@ void update_ideal_linear_speed(void)
  */
 void motor_control(void)
 {
-	float linear_pwm;
-	float angular_pwm;
+	float linear_voltage;
+	float angular_voltage;
 	float side_sensors_feedback = 0.;
 	float front_sensors_feedback = 0.;
 	float diagonal_sensors_feedback = 0.;
@@ -312,9 +345,9 @@ void motor_control(void)
 
 	control = get_control_constants();
 
-	linear_pwm = control.kp_linear * linear_error +
-		     control.kd_linear * (linear_error - last_linear_error);
-	angular_pwm =
+	linear_voltage = control.kp_linear * linear_error +
+			 control.kd_linear * (linear_error - last_linear_error);
+	angular_voltage =
 	    control.kp_angular * angular_error +
 	    control.kd_angular * (angular_error - last_angular_error) +
 	    control.kp_angular_side * side_sensors_feedback +
@@ -324,8 +357,10 @@ void motor_control(void)
 	    control.ki_angular_front * front_sensors_integral +
 	    control.ki_angular_diagonal * diagonal_sensors_integral;
 
-	pwm_left = (int32_t)(linear_pwm + angular_pwm);
-	pwm_right = (int32_t)(linear_pwm - angular_pwm);
+	voltage_left = linear_voltage + angular_voltage;
+	voltage_right = linear_voltage - angular_voltage;
+	pwm_left = voltage_to_motor_pwm(voltage_left);
+	pwm_right = voltage_to_motor_pwm(voltage_right);
 
 	power_left(pwm_left);
 	power_right(pwm_right);
