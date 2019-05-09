@@ -320,6 +320,8 @@ void motor_control(void)
 	if (!motor_control_enabled_signal)
 		return;
 
+	update_ideal_linear_speed();
+
 	if (side_sensors_close_control_enabled) {
 		side_sensors_feedback += get_side_sensors_close_error();
 		side_sensors_integral += side_sensors_feedback;
