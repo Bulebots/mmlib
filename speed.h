@@ -11,13 +11,13 @@
 #include "config.h"
 #include "setup.h"
 
+float get_max_force(void);
+void set_max_force(float value);
 float get_linear_acceleration(void);
-void set_linear_acceleration(float value);
 float get_linear_deceleration(void);
-void set_linear_deceleration(float value);
 float get_max_linear_speed(void);
 void set_max_linear_speed(float value);
-void set_linear_speed_variables(float force, bool run);
+void kinematic_configuration(float force, bool run);
 float get_move_turn_before(enum movement move);
 float get_move_turn_after(enum movement move);
 float get_move_turn_linear_speed(enum movement turn_type, float force);

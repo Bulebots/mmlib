@@ -1,13 +1,12 @@
 #include "speed.h"
 
 /**
- * Maximum acceleration and deceleration.
+ * Speed module static variables.
  *
- * - Linear acceleration is defined in meters per second squared.
- * - Linear deceleration is defined in meters per second squared.
+ * - Maximum force applied on the tires.
+ * - Maximum linear speed.
  */
-static volatile float linear_acceleration;
-static volatile float linear_deceleration;
+static volatile float max_force;
 static volatile float max_linear_speed;
 
 /**
@@ -52,15 +51,18 @@ static float _calculate_search_linear_speed(float force)
 }
 
 /**
- * @brief Set linear acceleration, deceleration and maximum linear speed.
+ * @brief Configure force and search/run mode.
+ *
+ * - Higher force results in higher accelerations.
+ * - Search mode limits the maximum linear speed for a smoother and more stable
+ *   search.
  *
  * @param[in] force Maximum force to apply on the tires.
  * @param[in] run Whether to set speed variables for the run phase or not.
  */
-void set_linear_speed_variables(float force, bool run)
+void kinematic_configuration(float force, bool run)
 {
-	linear_acceleration = 2 * force / MOUSE_MASS;
-	linear_deceleration = 2 * force / MOUSE_MASS;
+	max_force = force;
 	if (run)
 		max_linear_speed = get_linear_speed_limit();
 	else
@@ -88,24 +90,24 @@ struct turn_parameters turns[] = {
 };
 // clang-format on
 
-float get_linear_acceleration(void)
+float get_max_force(void)
 {
-	return linear_acceleration;
+	return max_force;
 }
 
-void set_linear_acceleration(float value)
+void set_max_force(float value)
 {
-	linear_acceleration = value;
+	max_force = value;
+}
+
+float get_linear_acceleration(void)
+{
+	return 2 * max_force / MOUSE_MASS;
 }
 
 float get_linear_deceleration(void)
 {
-	return linear_deceleration;
-}
-
-void set_linear_deceleration(float value)
-{
-	linear_deceleration = value;
+	return 2 * max_force / MOUSE_MASS;
 }
 
 float get_max_linear_speed(void)

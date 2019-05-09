@@ -177,16 +177,14 @@ void run_movement_sequence(const char *sequence)
  */
 void run_front_sensors_calibration(void)
 {
-	float linear_acceleration = get_linear_acceleration();
-	float linear_deceleration = get_linear_deceleration();
+	float max_force = get_max_force();
 	float distance;
 
 	calibrate();
 	disable_walls_control();
 	enable_motor_control();
 
-	set_linear_acceleration(2.);
-	set_linear_deceleration(2.);
+	set_max_force(.1);
 
 	distance = 2 * CELL_DIMENSION - MOUSE_LENGTH - WALL_WIDTH;
 
@@ -196,8 +194,7 @@ void run_front_sensors_calibration(void)
 
 	reset_motion();
 
-	set_linear_acceleration(linear_acceleration);
-	set_linear_deceleration(linear_deceleration);
+	set_max_force(max_force);
 
 	repeat_blink(10, 100);
 }

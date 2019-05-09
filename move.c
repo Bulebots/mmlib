@@ -203,8 +203,7 @@ void keep_front_wall_distance(float distance)
 	if (!front_wall_detection())
 		return;
 
-	set_linear_acceleration(get_linear_acceleration() / 2.);
-	set_linear_deceleration(get_linear_deceleration() / 2.);
+	set_max_force(get_max_force() / 2.);
 
 	while (true) {
 		front_sensors_control(true);
@@ -225,8 +224,7 @@ void keep_front_wall_distance(float distance)
 		target_straight(get_encoder_average_micrometers(), diff, 0.);
 	}
 
-	set_linear_acceleration(get_linear_acceleration() * 2.);
-	set_linear_deceleration(get_linear_deceleration() * 2.);
+	set_max_force(get_max_force() * 2.);
 
 	disable_walls_control();
 	reset_control_all();
@@ -306,15 +304,13 @@ void turn_to_start_position(float force)
 {
 	float distance;
 
-	set_linear_acceleration(get_linear_acceleration() / 4.);
-	set_linear_deceleration(get_linear_deceleration() / 4.);
+	set_max_force(get_max_force() / 4.);
 
 	turn_back(force);
 	distance = MOUSE_START_SHIFT - _current_cell_shift();
 	target_straight(get_encoder_average_micrometers(), distance, 0.);
 
-	set_linear_acceleration(get_linear_acceleration() * 4.);
-	set_linear_deceleration(get_linear_deceleration() * 4.);
+	set_max_force(get_max_force() * 4.);
 
 	disable_walls_control();
 	reset_control_all();
