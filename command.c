@@ -27,9 +27,6 @@ static void process_command(char *string)
 	else if (starts_with(string, "set micrometers_per_count "))
 		set_micrometers_per_count(
 		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
-	else if (starts_with(string, "set wheels_separation "))
-		set_wheels_separation(
-		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));
 	else if (starts_with(string, "set linear_speed_limit "))
 		set_linear_speed_limit(
 		    parse_float(string, RECEIVE_BUFFER_SIZE, 2));

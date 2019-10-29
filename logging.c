@@ -59,11 +59,9 @@ void log_battery_voltage(void)
 void log_configuration_variables(void)
 {
 	float micrometers_per_count = get_micrometers_per_count();
-	float wheels_separation = get_wheels_separation();
 	struct control_constants control = get_control_constants();
 
 	LOG_INFO("{\"micrometers_per_count\":%f,"
-		 "\"wheels_separation\":%f,"
 		 "\"kp_linear\":%f,"
 		 "\"kd_linear\":%f,"
 		 "\"kp_angular\":%f,"
@@ -72,8 +70,8 @@ void log_configuration_variables(void)
 		 "\"ki_angular_front\":%f,"
 		 "\"kp_angular_side\":%f,"
 		 "\"kp_angular_front\":%f}",
-		 micrometers_per_count, wheels_separation, control.kp_linear,
-		 control.kd_linear, control.kp_angular, control.kd_angular,
+		 micrometers_per_count, control.kp_linear, control.kd_linear,
+		 control.kp_angular, control.kd_angular,
 		 control.ki_angular_side, control.ki_angular_front,
 		 control.kp_angular_side, control.kp_angular_front);
 }
@@ -116,7 +114,7 @@ void log_linear_speed(void)
  */
 void log_angular_speed(void)
 {
-	float angular_speed = get_encoder_angular_speed();
+	float angular_speed = get_measured_angular_speed();
 	float ideal_speed = get_ideal_angular_speed();
 	float voltage_left = get_left_motor_voltage();
 	float voltage_right = get_right_motor_voltage();

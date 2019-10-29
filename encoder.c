@@ -16,9 +16,6 @@ static volatile int32_t right_micrometers;
 static volatile float left_speed;
 static volatile float right_speed;
 
-/* Angular speed, in radians per second */
-static volatile float angular_speed;
-
 /**
  * @brief Read left motor encoder counter difference.
  *
@@ -100,14 +97,6 @@ float get_encoder_right_speed(void)
 }
 
 /**
- * @brief Read angular speed in radians per second.
- */
-float get_encoder_angular_speed(void)
-{
-	return angular_speed;
-}
-
-/**
  * @brief Return the most likely counter difference.
  *
  * When reading an increasing or decreasing counter caution must be taken to:
@@ -173,8 +162,6 @@ void update_encoder_readings(void)
 	right_speed = right_diff_count *
 		      (micrometers_per_count / MICROMETERS_PER_METER) *
 		      SYSTICK_FREQUENCY_HZ;
-
-	angular_speed = (left_speed - right_speed) / get_wheels_separation();
 
 	last_left_count = left_count;
 	last_right_count = right_count;
