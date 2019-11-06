@@ -205,14 +205,14 @@ float hmi_configure_force(float minimum_force, float force_step)
 {
 	uint8_t force = 0;
 
+	music_play('C', 6, 0, 0.1);
+	music_play('E', 6, 0, 0.1);
+	music_play('G', 6, 0, 0.1);
+	music_play('C', 7, 0, 0.1);
 	while (1) {
 		switch (button_user_wait_action()) {
 		case BUTTON_SHORT:
-			if (force == 10)
-				force = 0;
-			else
-				force += 1;
-			repeat_blink(force, 200);
+			force += 1;
 			break;
 		case BUTTON_LONG:
 			led_left_on();
