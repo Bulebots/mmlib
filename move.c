@@ -521,9 +521,9 @@ void execute_movement_sequence(char *sequence, float force,
 			distance += get_move_turn_before(movement);
 			side_sensors_close_control(true);
 			side_sensors_far_control(false);
-			parametric_move_front(
-			    distance,
-			    get_move_turn_linear_speed(movement, force));
+			parametric_move_diagonal(
+					distance, (distance - CELL_DIMENSION * 2),
+					get_move_turn_linear_speed(movement, force));
 			speed_turn(movement, force);
 			distance = get_move_turn_after(movement);
 			break;
